@@ -28,7 +28,7 @@
     "@medusajs/cli": "2.11.3",
     "@medusajs/framework": "2.11.3",
     "@medusajs/medusa": "2.11.3",
-    "@react-email/components": "^1.0.1",
+    "@react-email/components": "0.5.7",
     "resend": "^6.5.2",
     "stripe": "^20.1.0"
   },
