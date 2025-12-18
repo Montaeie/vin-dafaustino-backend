@@ -2,6 +2,8 @@ import { loadEnv, defineConfig, Modules } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
+// Force rebuild - BACKEND_URL must be set in production environment
+
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000"
 const STOREFRONT_URL = process.env.STOREFRONT_URL || "http://localhost:3000"
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379"
