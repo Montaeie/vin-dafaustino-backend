@@ -1,5 +1,5 @@
 import { defineMiddlewares } from "@medusajs/medusa"
-import type { MedusaNextFunction, MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import cors from "cors"
 
 // Allowed origins for CORS
 const ALLOWED_ORIGINS = [
@@ -9,45 +9,39 @@ const ALLOWED_ORIGINS = [
   "http://localhost:8000",
 ]
 
-// Custom CORS middleware that forces headers
-const corsMiddleware = (
-  req: MedusaRequest,
-  res: MedusaResponse,
-  next: MedusaNextFunction
-) => {
-  const origin = req.headers.origin
+// Use the cors package directly with custom configuration
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) {
+      callback(null, true)
+      return
+    }
 
-  // Check if origin is allowed (including vercel.app domains)
-  const isAllowed = origin && (
-    ALLOWED_ORIGINS.includes(origin) ||
-    origin.endsWith(".vercel.app")
-  )
-
-  if (isAllowed) {
-    res.setHeader("Access-Control-Allow-Origin", origin)
-    res.setHeader("Access-Control-Allow-Credentials", "true")
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, x-publishable-api-key")
-  }
-
-  // Handle preflight
-  if (req.method === "OPTIONS") {
-    res.status(204).end()
-    return
-  }
-
-  next()
+    // Check if origin is allowed
+    if (ALLOWED_ORIGINS.includes(origin) || origin.endsWith(".vercel.app")) {
+      callback(null, true)
+    } else {
+      callback(null, false)
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "x-publishable-api-key", "Cookie"],
+  exposedHeaders: ["set-cookie"],
 }
+
+const corsMiddleware = cors(corsOptions)
 
 export default defineMiddlewares({
   routes: [
     {
       matcher: "/store/*",
-      middlewares: [corsMiddleware],
+      middlewares: [corsMiddleware as any],
     },
     {
       matcher: "/auth/*",
-      middlewares: [corsMiddleware],
+      middlewares: [corsMiddleware as any],
     },
   ],
 })
