@@ -52,6 +52,6 @@ module.exports = defineConfig({
 
   admin: {
     disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
-    backendUrl: BACKEND_URL,
+    // backendUrl uses browser origin by default - no localhost fallback
   },
 })
