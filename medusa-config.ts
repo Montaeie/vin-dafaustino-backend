@@ -2,19 +2,35 @@ import { loadEnv, defineConfig, Modules } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
-// Force rebuild v3 - Trigger redeploy for CORS env vars
+// Force rebuild v4 - Debug CORS
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000"
 const STOREFRONT_URL = process.env.STOREFRONT_URL || "http://localhost:3000"
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379"
 
+// Debug: Log CORS values at startup
+console.log("=== CORS DEBUG ===")
+console.log("STORE_CORS env:", process.env.STORE_CORS)
+console.log("STOREFRONT_URL env:", process.env.STOREFRONT_URL)
+console.log("STOREFRONT_URL fallback:", STOREFRONT_URL)
+console.log("==================")
+
+// Use regex pattern to match dafaustino domains + vercel + localhost
+const STORE_CORS_VALUE = process.env.STORE_CORS ||
+  "https://www.dafaustino.com,https://dafaustino.com,/\\.vercel\\.app$/,http://localhost:3000"
+
+const ADMIN_CORS_VALUE = process.env.ADMIN_CORS || BACKEND_URL
+
+const AUTH_CORS_VALUE = process.env.AUTH_CORS ||
+  `${BACKEND_URL},https://www.dafaustino.com,https://dafaustino.com`
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     http: {
-      storeCors: process.env.STORE_CORS || STOREFRONT_URL,
-      adminCors: process.env.ADMIN_CORS || BACKEND_URL,
-      authCors: process.env.AUTH_CORS || `${BACKEND_URL},${STOREFRONT_URL}`,
+      storeCors: STORE_CORS_VALUE,
+      adminCors: ADMIN_CORS_VALUE,
+      authCors: AUTH_CORS_VALUE,
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
