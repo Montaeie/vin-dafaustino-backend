@@ -2,7 +2,7 @@ import { loadEnv, defineConfig, Modules } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
-// Force rebuild v2 - STORE_CORS must include https:// prefix
+// Force rebuild v3 - Trigger redeploy for CORS env vars
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000"
 const STOREFRONT_URL = process.env.STOREFRONT_URL || "http://localhost:3000"
