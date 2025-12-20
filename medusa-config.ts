@@ -8,6 +8,8 @@ module.exports = defineConfig({
     redisUrl: process.env.REDIS_URL,
     workerMode: process.env.MEDUSA_WORKER_MODE as 'shared' | 'worker' | 'server',
     http: {
+      port: parseInt(process.env.PORT || "9000"),
+      host: process.env.HOST || "0.0.0.0",
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
       authCors: process.env.AUTH_CORS!,
