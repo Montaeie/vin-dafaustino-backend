@@ -2,11 +2,11 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "yarn install && yarn build"
+    "buildCommand": "chmod +x build.sh && ./build.sh"
   },
   "deploy": {
-    "startCommand": "cd .medusa/server && npm install && npm run predeploy && npm run start",
+    "startCommand": "chmod +x start.sh && ./start.sh",
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 3
+    "restartPolicyMaxRetries": 10
   }
 }
