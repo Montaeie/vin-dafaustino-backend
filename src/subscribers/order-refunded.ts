@@ -24,7 +24,7 @@ export default async function orderRefundedHandler({
       filters: { id: data.id },
     })
 
-    const order = orders[0]
+    const order = orders[0] as any
 
     if (!order) {
       console.error("[OrderRefunded] Order not found:", data.id)

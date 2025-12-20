@@ -24,7 +24,7 @@ export default async function orderCanceledHandler({
       filters: { id: data.id },
     })
 
-    const order = orders[0]
+    const order = orders[0] as any
 
     if (!order) {
       console.error("[OrderCanceled] Order not found:", data.id)

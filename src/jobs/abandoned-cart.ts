@@ -44,7 +44,7 @@ export default async function abandonedCartJob(container: MedusaContainer) {
 
     const siteUrl = process.env.STOREFRONT_URL || "https://dafaustino.com"
 
-    for (const cart of carts) {
+    for (const cart of carts as any[]) {
       // Verifier si on a deja envoye un email pour ce panier
       const metadata = cart.metadata as Record<string, any> || {}
       if (metadata.abandoned_email_sent) {
@@ -73,13 +73,16 @@ export default async function abandonedCartJob(container: MedusaContainer) {
 
       const cartTotal = getNumericValue(cart.total)
 
+      // Vérifier que l'email existe
+      if (!cart.email) continue
+
       // Extraire le prenom de l'email si possible
       const emailParts = cart.email.split("@")[0]
       const customerName = emailParts.charAt(0).toUpperCase() + emailParts.slice(1)
 
       try {
         await resendService.sendEmail({
-          to: cart.email,
+          to: cart.email as string,
           subject: "Votre panier vous attend - Da Faustino",
           react: CartAbandonedEmail({
             customerName,
