@@ -8,9 +8,6 @@ echo "NODE_ENV: $NODE_ENV"
 
 cd .medusa/server
 
-echo "=== Installing server dependencies ==="
-npm install --omit=dev
-
 echo "=== Running database migrations ==="
 npm run predeploy
 
