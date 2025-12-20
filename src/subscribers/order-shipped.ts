@@ -40,7 +40,7 @@ export default async function orderShippedHandler({
       filters: { id: data.order_id },
     })
 
-    const order = orders[0]
+    const order = orders[0] as any
 
     if (!order) {
       console.error("[OrderShipped] Order not found:", data.order_id)

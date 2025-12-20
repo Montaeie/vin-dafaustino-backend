@@ -45,7 +45,7 @@ export async function DELETE(req: MedusaRequest, res: MedusaResponse) {
     await auditService.log({
       event_type: AuditEventType.ACCOUNT_DELETED,
       customer_id: customerId,
-      customer_email: customer.email,
+      customer_email: customer.email || undefined,
       ip_address: ipAddress,
       user_agent: userAgent,
       metadata: {

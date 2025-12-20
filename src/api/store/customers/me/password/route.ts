@@ -89,7 +89,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
         app_metadata: {
           customer_id: customerId
         }
-      }
+      } as any
     })
 
     if (!authIdentities || authIdentities.length === 0) {
@@ -121,7 +121,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     await auditService.log({
       event_type: AuditEventType.PASSWORD_CHANGED,
       customer_id: customerId,
-      customer_email: customer.email,
+      customer_email: customer.email || undefined,
       ip_address: ipAddress,
       user_agent: userAgent,
       metadata: {
