@@ -5,7 +5,7 @@
     "buildCommand": "yarn install && yarn build"
   },
   "deploy": {
-    "startCommand": "cd .medusa/server && npm install && npx medusa db:migrate && npm run start",
+    "startCommand": "npx medusa db:migrate && npx medusa start",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
   }
