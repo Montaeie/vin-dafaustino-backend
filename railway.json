@@ -5,8 +5,8 @@
     "buildCommand": "yarn install && yarn build"
   },
   "deploy": {
-    "startCommand": "yarn start",
+    "startCommand": "cd .medusa/server && npm install && npm run start",
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 5
+    "restartPolicyMaxRetries": 3
   }
 }
