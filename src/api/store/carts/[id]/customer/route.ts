@@ -11,32 +11,22 @@ export async function POST(
 ) {
   const cartId = req.params.id
 
-  // Récupérer le customer depuis l'auth
-  const authIdentity = (req as any).auth_context?.auth_identity_id
+  // Dans Medusa v2, actor_id contient directement le customer_id pour les routes store
+  const customerId = (req as any).auth_context?.actor_id
 
-  if (!authIdentity) {
+  console.log("[Cart/Customer] Request received")
+  console.log("[Cart/Customer] Cart ID:", cartId)
+  console.log("[Cart/Customer] auth_context:", JSON.stringify((req as any).auth_context))
+  console.log("[Cart/Customer] Customer ID (actor_id):", customerId)
+
+  if (!customerId) {
     return res.status(401).json({
-      message: "Authentication required",
+      message: "Authentication required - no customer ID found",
     })
   }
 
   try {
     const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-
-    // Récupérer le customer lié à l'auth identity
-    const { data: authIdentities } = await query.graph({
-      entity: "auth_identity",
-      fields: ["app_metadata"],
-      filters: { id: authIdentity },
-    })
-
-    const customerId = authIdentities[0]?.app_metadata?.customer_id
-
-    if (!customerId) {
-      return res.status(400).json({
-        message: "No customer linked to this auth identity",
-      })
-    }
 
     // Mettre à jour le cart avec le customer_id via le service
     const cartService = req.scope.resolve("cart")
@@ -53,13 +43,13 @@ export async function POST(
       filters: { id: cartId },
     })
 
-    console.log(`[Cart] Associated cart ${cartId} with customer ${customerId}`)
+    console.log(`[Cart/Customer] SUCCESS - Associated cart ${cartId} with customer ${customerId}`)
 
     return res.json({
       cart: carts[0],
     })
   } catch (error) {
-    console.error("[Cart] Error associating customer:", error)
+    console.error("[Cart/Customer] Error associating customer:", error)
     return res.status(500).json({
       message: "Failed to associate cart with customer",
     })
