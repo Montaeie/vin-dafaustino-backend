@@ -25,12 +25,15 @@ updateCartPromotionsWorkflow.hooks.validate(
     }
 
     console.log("[LAPLACE10] Validating first purchase promo code...")
+    console.log("[LAPLACE10] Cart ID:", cart?.id)
+    console.log("[LAPLACE10] Cart customer_id:", cart?.customer_id)
 
     // 1. Vérifier que le panier a un client associé
     if (!cart?.customer_id) {
+      console.log("[LAPLACE10] REJECTED: No customer_id on cart")
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "Le code LAPLACE10 est réservé aux nouveaux clients. Veuillez créer un compte pour l'utiliser."
+        "Le code LAPLACE10 est réservé aux nouveaux clients. Veuillez vous connecter à votre compte."
       )
     }
 
