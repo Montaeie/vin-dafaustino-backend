@@ -94,9 +94,21 @@ export default async function abandonedCartJob(container: MedusaContainer) {
 
         console.log(`[AbandonedCart] Email sent to ${cart.email} for cart ${cart.id}`)
 
-        // Marquer le panier comme ayant recu l'email
-        // Note: En Medusa v2, on peut mettre a jour les metadata du cart
-        // Mais pour l'instant on log juste - implementer la mise a jour si necessaire
+        // Marquer le panier comme ayant recu l'email pour eviter le spam
+        try {
+          const cartService = container.resolve("cart")
+          await cartService.updateCarts([{
+            id: cart.id,
+            metadata: {
+              ...metadata,
+              abandoned_email_sent: true,
+              abandoned_email_sent_at: new Date().toISOString(),
+            },
+          }])
+          console.log(`[AbandonedCart] Marked cart ${cart.id} as email sent`)
+        } catch (updateError) {
+          console.error(`[AbandonedCart] Failed to update cart metadata for ${cart.id}:`, updateError)
+        }
 
       } catch (emailError) {
         console.error(`[AbandonedCart] Failed to send email for cart ${cart.id}:`, emailError)
